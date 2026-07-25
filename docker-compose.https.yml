@@ -1,0 +1,13 @@
+services:
+  # Override the base HTTP Nginx configuration with TLS for a public domain.
+  # Start with:
+  # docker compose -f docker-compose.yml -f docker-compose.https.yml up -d --build
+  client:
+    ports:
+      - "443:443"
+    environment:
+      DOMAIN: "${DOMAIN:?Set DOMAIN in .env}"
+      NGINX_ENVSUBST_FILTER: DOMAIN
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./Client/nginx.https.conf.template:/etc/nginx/templates/default.conf.template:ro

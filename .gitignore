@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+!.env.example
+
+mongo_data/
+neo4j_data/
+
+__pycache__/
+*.py[cod]
+
+/models/*
+!/models/.gitkeep

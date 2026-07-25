@@ -1,0 +1,99 @@
+services:
+  # 1. Neo4j (Knowledge Graph)
+  neo4j:
+    image: neo4j:2026.04.0
+    container_name: ics_neo4j
+    environment:
+      NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env}"
+    ports:
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
+    volumes:
+      - ./neo4j_data:/data
+    restart: unless-stopped
+
+  # 2. MongoDB
+  mongodb:
+    image: mongo:8.3.1
+    container_name: ics_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_ROOT_USERNAME:-admin}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_ROOT_PASSWORD:?Set MONGO_ROOT_PASSWORD in .env}"
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - ./mongo_data:/data/db
+    restart: unless-stopped
+
+  # 3. llama.cpp Server: Chat
+  llama-chat:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: ics_llama_chat
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./models:/models
+    command: -m /models/gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf --spec-draft-model /models/gemma-4-E2B-it-Q4_0-MTP.gguf --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-n-min 1 -c 16384 --host 0.0.0.0 --port 8080 --flash-attn on --cache-type-k q4_0 --cache-type-v q4_0 --temp 0.0
+    restart: unless-stopped
+
+  # 4. llama.cpp Server: Embedding Model
+  llama-embed:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: ics_llama_embed
+    ports:
+      - "127.0.0.1:8081:8080"
+    volumes:
+      - ./models:/models
+    command: -m /models/embeddinggemma-300M-Q8_0.gguf -c 8192 --embedding --no-webui --host 0.0.0.0 --port 8080
+    restart: unless-stopped
+
+  # 5. FastAPI Backend
+  backend:
+    build: ./Backend
+    container_name: ics_backend
+    expose:
+      - "3033"
+    env_file:
+      - ./.env
+    volumes:
+      - ./Backend:/app
+    depends_on:
+      - mongodb
+      - neo4j
+      - llama-chat
+      - llama-embed
+    restart: unless-stopped
+
+  # 6. React SPA + Nginx HTTP reverse proxy.
+  # For a public HTTPS deployment, add docker-compose.https.yml.
+  client:
+    build: ./Client
+    container_name: ics_client
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Setup-only Neo4j population job.
+  # Run manually with:
+  # docker compose --profile setup run --rm populate-neo4j
+  populate-neo4j:
+    build: ./populate
+    profiles: ["setup"]
+    container_name: ics_populate_neo4j
+    env_file:
+      - ./.env
+    environment:
+      - NEO4J_HTTP_URL=http://neo4j:7474/db/neo4j/tx/commit
+    depends_on:
+      - neo4j
+      - llama-embed
+    command: >
+      sh -c 'python populate_graph.py
+      --neo4j-http-url "$${NEO4J_HTTP_URL}"
+      --neo4j-user "$${NEO4J_USER}"
+      --neo4j-password "$${NEO4J_PASSWORD}"
+      --embedding-url "$${EMBEDDING_ENDPOINT}"
+      --embedding-model "$${EMBEDDING_MODEL}"'
+    restart: "no"

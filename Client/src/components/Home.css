@@ -1,0 +1,470 @@
+.home-container {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 104px 24px 40px;
+    max-width: 1160px;
+    margin: 0 auto;
+}
+
+.fullscreen-toggle {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 10;
+    width: 52px;
+    height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(203, 213, 225, 0.7);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.68);
+    color: #475569;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.07);
+    backdrop-filter: blur(10px);
+}
+
+.fullscreen-toggle:hover {
+    color: #1f2937;
+    border-color: rgba(148, 163, 184, 0.85);
+    background: rgba(255, 255, 255, 0.92);
+    transform: translateY(-1px);
+}
+.fullscreen-toggle.fullscreen-active {
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 64px;
+    opacity: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    transform: none;
+}
+
+.fullscreen-toggle.fullscreen-active:hover {
+    opacity: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+.brand-header {
+    position: absolute;
+    top: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+    animation: brand-fade-in 0.45s ease-out;
+}
+
+.brand-logo {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.brand-name {
+    color: #334155;
+    font-size: 1.18rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.idle-stage {
+    width: min(100%, 1080px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    margin-top: -44px;
+    animation: fade-slide-up 0.45s ease-out;
+}
+
+.idle-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+
+.idle-heading h1 {
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    font-weight: 650;
+    color: #1f2937;
+    letter-spacing: 0;
+}
+
+.voice-hint {
+    margin-top: -8px;
+    font-size: 0.92rem;
+    color: #64748b;
+}
+
+.voice-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    animation: fade-slide-up 0.4s ease-out;
+}
+
+@keyframes brand-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fade-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cancel-button {
+    margin-top: 20px;
+    padding: 10px 24px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+    direction: rtl;
+}
+
+.cancel-button:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .fullscreen-toggle {
+        top: 10px;
+        left: 10px;
+        width: 48px;
+        height: 48px;
+    }
+    .home-container {
+        padding-top: 92px;
+    }
+
+    .brand-header {
+        top: 18px;
+        gap: 9px;
+    }
+
+    .brand-logo {
+        width: 46px;
+        height: 46px;
+    }
+
+    .brand-name {
+        font-size: 1.03rem;
+    }
+    .start-button {
+        padding: 14px 36px;
+        font-size: 1.1rem;
+    }
+
+    .idle-stage {
+        margin-top: -24px;
+    }
+}
+
+.processing-card {
+    width: min(100%, 440px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    margin-top: 28px;
+    padding: 28px 32px;
+    border: 1px solid #e3e8ef;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 18px 46px rgba(15, 23, 42, 0.09);
+    animation: fade-slide-up 0.35s ease-out;
+}
+
+.graph-search {
+    position: relative;
+    width: 118px;
+    height: 92px;
+}
+
+.graph-line {
+    position: absolute;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(37, 99, 235, 0.12), rgba(20, 184, 166, 0.72), rgba(37, 99, 235, 0.12));
+    transform-origin: left center;
+    animation: graph-line-glow 1.6s ease-in-out infinite;
+}
+
+.line-a {
+    width: 55px;
+    top: 28px;
+    left: 25px;
+    transform: rotate(-26deg);
+}
+
+.line-b {
+    width: 58px;
+    top: 54px;
+    left: 24px;
+    transform: rotate(25deg);
+    animation-delay: 0.2s;
+}
+
+.line-c {
+    width: 54px;
+    top: 49px;
+    left: 61px;
+    transform: rotate(-45deg);
+    animation-delay: 0.4s;
+}
+
+.graph-node {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #14b8a6;
+    box-shadow: 0 9px 18px rgba(20, 184, 166, 0.24);
+    animation: graph-node-pulse 1.6s ease-in-out infinite;
+}
+
+.node-a {
+    top: 16px;
+    left: 17px;
+}
+
+.node-b {
+    top: 66px;
+    left: 17px;
+    animation-delay: 0.25s;
+}
+
+.node-c {
+    top: 18px;
+    right: 12px;
+    animation-delay: 0.5s;
+}
+
+.node-center {
+    width: 64px;
+    height: 64px;
+    top: 31px;
+    left: 48px;
+    background: #2563eb;
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.25);
+    animation: graph-center-pulse 1.6s ease-in-out infinite;
+}
+
+.graph-scan {
+    position: absolute;
+    top: 27px;
+    left: 44px;
+    width: 52px;
+    height: 52px;
+    border: 1px solid rgba(37, 99, 235, 0.24);
+    border-radius: 50%;
+    animation: graph-scan 1.6s ease-out infinite;
+}
+
+.processing-copy {
+    text-align: center;
+}
+
+.processing-title {
+    font-size: 1rem;
+    font-weight: 650;
+    color: #1f2937;
+}
+
+.processing-subtitle {
+    margin-top: 2px;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.processing-meter {
+    width: min(100%, 280px);
+    height: 5px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e8eef6;
+}
+
+.processing-meter span {
+    display: block;
+    width: 38%;
+    height: 100%;
+    border-radius: inherit;
+    background: #2563eb;
+    animation: meter-slide 1.45s ease-in-out infinite;
+}
+
+@keyframes graph-line-glow {
+    0%,
+    100% {
+        opacity: 0.42;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes graph-node-pulse {
+    0%,
+    100% {
+        transform: scale(0.92);
+        opacity: 0.78;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+}
+
+@keyframes graph-center-pulse {
+    0%,
+    100% {
+        transform: scale(0.94);
+    }
+
+    50% {
+        transform: scale(1.04);
+    }
+}
+
+@keyframes graph-scan {
+    0% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.8);
+    }
+}
+
+@keyframes meter-slide {
+    0% {
+        transform: translateX(170%);
+    }
+
+    50% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-170%);
+    }
+}
+
+.conversation-view {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0 20px;
+    animation: fade-slide-up 0.4s ease-out;
+}
+
+.speaking-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    margin-top: 18px;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.speaking-bars {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.speaking-bars span {
+    width: 3px;
+    height: 12px;
+    border-radius: 999px;
+    background: #2563eb;
+    animation: speaking-bar 0.9s ease-in-out infinite;
+}
+
+.speaking-bars span:nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+.speaking-bars span:nth-child(3) {
+    animation-delay: 0.28s;
+}
+
+@keyframes speaking-bar {
+    0%,
+    100% {
+        transform: scaleY(0.45);
+        opacity: 0.55;
+    }
+
+    50% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
